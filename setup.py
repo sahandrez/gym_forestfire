@@ -11,7 +11,7 @@ setup(
     install_requires=[
         'gym',
         'numpy',
-        'matplotlib',
+        'opencv-python',
     ],
     description="Forest fire Gym environment.",
     author="Sahand Rezaei-Shoshtari",

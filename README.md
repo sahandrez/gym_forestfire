@@ -8,10 +8,10 @@ cells, where L is the sidelength of the grid and d is its dimension.
 
 A cell can have three states: empty, occupied by a tree or burning. The Drossel and 
 Schwabl (1992) model is then defined by four rules executed simultaneously:
-1. A burning cell turns into an empty cell
-1. A tree will burn if at least one neighbor is burning
-1. A tree ignites with probability f even if no neighbor is burning
-1. An empty space fills with a tree with probability p
+1. A burning cell turns into an empty cell.
+1. A tree will burn with probability q if at least one neighbor is burning.
+1. A tree ignites with probability f even if no neighbor is burning.
+1. An empty space fills with a tree with probability p.
 
 ## Dependencies 
 This code has very few dependencies and the simulation is fully vectorized for faster
@@ -21,7 +21,7 @@ Requirements:
 * Python 3.5+
 * OpenAI Gym
 * Numpy 
-* Matplotlib (for rendering the environment)
+* OpenCV (for rendering the environment)
 
 ## Instructions
 Clone the package and install it using `pip`. This install the package and all its 
