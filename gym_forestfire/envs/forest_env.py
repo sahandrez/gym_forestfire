@@ -16,10 +16,7 @@ from gym_forestfire.envs.forest import Forest
 
 STATE_W = 128
 STATE_H = 128
-T_HORIZON = 1000
-
-
-# TODO: Compute the reward
+T_HORIZON = 500
 
 
 class ForestFireEnv(gym.Env):
@@ -28,32 +25,42 @@ class ForestFireEnv(gym.Env):
         self.seed()
         self.reward = 0
         self.state = None
-        self.prev_state = None
         self.t = 0
 
         self.forest = Forest(**env_kwargs)
 
-        self.action_space = spaces.Box(low=-1, high=1, shape=(2,), dtype=np.float32)
-        self.observation_space = spaces.Box(low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8)
+        self.action_space = spaces.Box(low=0, high=1, shape=(2,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=10, shape=(STATE_H, STATE_W), dtype=np.uint8)
 
     def step(self, action):
-        self.forest.step(action)
+        aimed_fire, is_fire = self.forest.step(action)
         self.t += 1
+        step_reward = 0
+
+        done = bool(self.t > T_HORIZON)
 
         # reward calculation
-        self.reward = 0
+        # if the action has been aimed at fire: add 1 to the reward
+        if aimed_fire:
+            step_reward += 1
+        # if fire exists but the action has done nothing: subtract 1 from the reward
+        if not aimed_fire and is_fire:
+            step_reward -= 1
+        # if episode is over and at least 50% of the trees are remaining: add 100, otherwise: subtract 100
+        if done:
+            if np.mean(self.forest.world) > 0.5 * self.forest.p_init_tree:
+                step_reward += 100
+            else:
+                step_reward -= 100
+
+        self.reward = step_reward
 
         state = self.forest.world
         if state.shape != (STATE_H, STATE_W):
             state = self._scale(state, STATE_H, STATE_W)
-
         self.state = np.array(state)
-        self.prev_state = self.state
 
-        done = bool(not np.any(self.forest.world)
-                    or self.t > T_HORIZON)
-
-        return self.state, self.reward, done, {}
+        return self.state, step_reward, done, {}
 
     def reset(self):
         self.forest.reset()
