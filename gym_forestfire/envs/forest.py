@@ -1,11 +1,12 @@
 """
+Copyright 2020 Sahand Rezaei-Shoshtari. All Rights Reserved.
+
 Forest-fire simulation based on the rossel and
 Schwabl (1992) model. The vectorized implementation
 of cellular automaton was adapted from:
 http://drsfenner.org/blog/2015/08/game-of-life-in-numpy-2/
 
 Author: Sahand Rezaei-Shoshtari
-Copyright protected.
 """
 
 import numpy as np

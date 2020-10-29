@@ -1,8 +1,9 @@
 """
+Copyright 2020 Sahand Rezaei-Shoshtari. All Rights Reserved.
+
 Forest-fire gym environment.
 
 Author: Sahand Rezaei-Shoshtari
-Copyright protected.
 """
 
 import numpy as np

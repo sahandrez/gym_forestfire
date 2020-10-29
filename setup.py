@@ -1,3 +1,6 @@
+"""
+Copyright 2020 Sahand Rezaei-Shoshtari. All Rights Reserved.
+"""
 from setuptools import setup
 import sys
 

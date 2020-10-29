@@ -1,3 +1,6 @@
+"""
+Copyright 2020 Sahand Rezaei-Shoshtari. All Rights Reserved.
+"""
 import gym
 
 env = gym.make('gym_forestfire:ForestFire-v0', world_size=(128, 128))
