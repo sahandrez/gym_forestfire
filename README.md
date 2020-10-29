@@ -13,6 +13,9 @@ Schwabl (1992) model is then defined by four rules executed simultaneously:
 1. A tree ignites with probability f even if no neighbor is burning.
 1. An empty space fills with a tree with probability p.
 
+The figure below shows snapshots of the forest fire simulation. 
+![Forest fire simulation](figures/forestfire.png)
+
 ## Markov Decision Process Formulation
 The problem of controlling the forest fire is modeled as a Markov Decision Process (MDP):
 * **States:** An aerial image of the forest showing trees, fires, and empty cells. 

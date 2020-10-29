@@ -51,6 +51,9 @@ class Forest:
         self.p_init_tree = init_tree
         self.extinguisher_ratio = extinguisher_ratio
 
+        # used for rendering the action rectangle
+        self.action_rect = None
+
         full_size = tuple(i + 2 for i in world_size)
         self.full = np.zeros(full_size, dtype=np.uint8)
         nd_slice = (slice(1, -1),) * len(world_size)
@@ -67,6 +70,22 @@ class Forest:
         # if the action has been aimed at fire, returns true
         aimed_fire = False
 
+        # action is a normalized 2D vector with [x. y] as the center
+        # of the square of applying fire extinguishers
+        if action is not None:
+            x, y = int(self.world.shape[1] * action[1]), int(self.world.shape[0] * action[0])
+            w, h = int(self.world.shape[1] * self.extinguisher_ratio), int(
+                self.world.shape[0] * self.extinguisher_ratio)
+            x_1, x_2 = max(0, int(x - w / 2)), min(self.world.shape[1], int(x + w / 2))
+            y_1, y_2 = max(0, int(y - h / 2)), min(self.world.shape[0], int(y + h / 2))
+            self.action_rect = [(x_1, y_1), (x_2, y_2)]
+
+            aimed_fire = np.any(self.fire[y_1:y_2, x_1:x_2])
+            self.world[y_1:y_2, x_1:x_2] = np.where(self.world[y_1:y_2, x_1:x_2] == self.FIRE_CELL, self.EMPTY_CELL,
+                                                    self.world[y_1:y_2, x_1:x_2])
+        else:
+            self.action_rect = None
+
         neighborhoods = get_neighborhoud(self.full)
         neighbor_ct = np.sum(neighborhoods, self.sum_over) - self.world
 
@@ -74,14 +93,6 @@ class Forest:
         self.tree = self.world == self.TREE_CELL
         self.empty = self.world == self.EMPTY_CELL
         is_fire = np.any(self.fire)
-
-        # action is a normalized 2D vector with [x. y] as the center
-        # of the square of applying fire extinguishers
-        if action is not None:
-            x, y = int(self.world.shape[1] * action[1]), int(self.world.shape[0] * action[0])
-            w, h = int(self.world.shape[1] * self.extinguisher_ratio), int(self.world.shape[0] * self.extinguisher_ratio)
-            aimed_fire = np.any(self.fire[x - w:x + w, y - h:y + h])
-            self.fire[x-w:x+w, y-h:y+h] = False
 
         # Apply the update rules:
         # 1. A burning cell turns into an empty cell
@@ -111,6 +122,8 @@ class Forest:
         im = cv2.cvtColor(self.world, cv2.COLOR_GRAY2BGR)
         im[self.tree, 1] = 255
         im[self.fire, 2] = 255
+        if self.action_rect is not None:
+            cv2.rectangle(im, self.action_rect[0], self.action_rect[1], (255, 255, 255), 1)
         im = cv2.resize(im, (640, 640))
         cv2.imshow("Forest", im)
         cv2.waitKey(50)

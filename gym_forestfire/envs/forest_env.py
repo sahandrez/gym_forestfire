@@ -16,7 +16,7 @@ from gym_forestfire.envs.forest import Forest
 
 STATE_W = 128
 STATE_H = 128
-T_HORIZON = 500
+T_HORIZON = 300
 
 
 class ForestFireEnv(gym.Env):
