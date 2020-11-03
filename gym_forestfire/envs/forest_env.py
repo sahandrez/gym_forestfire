@@ -8,7 +8,7 @@ Author: Sahand Rezaei-Shoshtari
 
 import numpy as np
 import gym
-import matplotlib.pyplot as plt
+import cv2
 from gym import spaces
 from gym.utils import seeding
 
@@ -74,8 +74,7 @@ class ForestFireEnv(gym.Env):
         self.forest.render()
 
     def close(self):
-        if plt.get_fignums():
-            plt.close('all')
+        cv2.destroyAllWindows()
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
