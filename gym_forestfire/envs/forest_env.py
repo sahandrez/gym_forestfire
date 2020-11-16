@@ -15,8 +15,8 @@ from gym.utils import seeding
 from gym_forestfire.envs.forest import Forest
 
 
-STATE_W = 64
-STATE_H = 64
+STATE_W = 16
+STATE_H = 16
 T_HORIZON = 300
 
 

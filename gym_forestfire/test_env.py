@@ -3,7 +3,7 @@ Copyright 2020 Sahand Rezaei-Shoshtari. All Rights Reserved.
 """
 import gym
 
-env = gym.make('gym_forestfire:ForestFire-v0', world_size=(128, 128))
+env = gym.make('gym_forestfire:ForestFire-v0', world_size=(64, 64))
 env.reset()
 
 for _ in range(300):

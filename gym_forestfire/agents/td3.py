@@ -15,18 +15,21 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def init_weights(m):
-    print(m)
-    nn.init.orthogonal(m.weight)
+    if isinstance(m, (nn.Conv2d, nn.Linear)):
+        nn.init.orthogonal_(m.weight)
 
 
 class Actor(nn.Module):
-    def __init__(self, state_dim, action_dim, max_action, image_obs):
+    def __init__(self, state_dim, action_dim, max_action, image_obs, cnn):
         super(Actor, self).__init__()
 
         self.image_obs = image_obs
+        self.cnn = cnn
         self.cnn_out = state_dim * 4 * 4
-
         if image_obs:
+            state_dim = state_dim ** 2
+
+        if image_obs and cnn:
             self.cnn = nn.Sequential(
                 nn.Conv2d(1, 32, 8, stride=4, padding=0),
                 nn.ReLU(),
@@ -53,7 +56,7 @@ class Actor(nn.Module):
         self.max_action = max_action
 
     def forward(self, state):
-        if self.image_obs:
+        if self.image_obs and self.cnn:
             state = self.cnn(state)
             state = state.view(-1, self.cnn_out)
         state = self.fcn(state)
@@ -62,13 +65,16 @@ class Actor(nn.Module):
 
 
 class Critic(nn.Module):
-    def __init__(self, state_dim, action_dim, image_obs):
+    def __init__(self, state_dim, action_dim, image_obs, cnn):
         super(Critic, self).__init__()
 
         self.image_obs = image_obs
+        self.cnn = cnn
         self.cnn_out = state_dim * 4 * 4
-
         if image_obs:
+            state_dim = state_dim ** 2
+
+        if image_obs and cnn:
             self.cnn = nn.Sequential(
                 nn.Conv2d(1, 32, 8, stride=4, padding=0),
                 nn.ReLU(),
@@ -107,7 +113,7 @@ class Critic(nn.Module):
         self.l4 = nn.Linear(256, 1)
 
     def forward(self, state, action):
-        if self.image_obs:
+        if self.image_obs and self.cnn:
             state = self.cnn(state)
             state = state.view(-1, self.cnn_out)
             sa = torch.cat([state, action], 1)
@@ -124,7 +130,7 @@ class Critic(nn.Module):
         return q1, q2
 
     def Q1(self, state, action):
-        if self.image_obs:
+        if self.image_obs and self.cnn:
             state = self.cnn(state)
             state = state.view(-1, self.cnn_out)
             sa = torch.cat([state, action], 1)
@@ -148,19 +154,21 @@ class TD3(object):
             tau=0.005,
             policy_noise=0.2,
             noise_clip=0.5,
-            policy_freq=2
+            policy_freq=2,
+            cnn=False,
     ):
 
-        self.actor = Actor(state_dim, action_dim, max_action, image_obs).to(device)
+        self.actor = Actor(state_dim, action_dim, max_action, image_obs, cnn).to(device)
         self.actor_target = copy.deepcopy(self.actor)
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=3e-4)
 
-        self.critic = Critic(state_dim, action_dim, image_obs).to(device)
+        self.critic = Critic(state_dim, action_dim, image_obs, cnn).to(device)
         self.critic_target = copy.deepcopy(self.critic)
         self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=3e-4)
 
         self.max_action = max_action
         self.image_obs = image_obs
+        self.cnn = cnn
         self.discount = discount
         self.tau = tau
         self.policy_noise = policy_noise
@@ -170,7 +178,7 @@ class TD3(object):
         self.total_it = 0
 
     def select_action(self, state):
-        if self.image_obs:
+        if self.image_obs and self.cnn:
             state = torch.FloatTensor(state.reshape(1, 1, 64, 64)).to(device)
         else:
             state = torch.FloatTensor(state.reshape(1, -1)).to(device)
@@ -181,7 +189,7 @@ class TD3(object):
 
         # Sample replay buffer
         state, action, next_state, reward, not_done = replay_buffer.sample(batch_size)
-        if self.image_obs:
+        if self.image_obs and self.cnn:
             state = state.view(-1, 1, 64, 64)
             next_state = next_state.view(-1, 1, 64, 64)
 
