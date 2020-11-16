@@ -74,6 +74,8 @@ class Forest:
         # action is a normalized 2D vector with [x. y] as the center
         # of the square of applying fire extinguishers
         if action is not None:
+            # change action from [-1, 1] to [0, 1]:
+            action = (action + 1) / 2
             x, y = int(self.world.shape[1] * action[1]), int(self.world.shape[0] * action[0])
             w, h = int(self.world.shape[1] * self.extinguisher_ratio), int(
                 self.world.shape[0] * self.extinguisher_ratio)

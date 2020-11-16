@@ -30,7 +30,7 @@ class ForestFireEnv(gym.Env):
 
         self.forest = Forest(**env_kwargs)
 
-        self.action_space = spaces.Box(low=0, high=1, shape=(2,), dtype=np.float32)
+        self.action_space = spaces.Box(low=-1, high=1, shape=(2,), dtype=np.float32)
         self.observation_space = spaces.Box(low=0, high=10, shape=(STATE_H, STATE_W), dtype=np.uint8)
         self._max_episode_steps = T_HORIZON
 
