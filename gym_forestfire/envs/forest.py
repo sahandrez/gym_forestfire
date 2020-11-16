@@ -31,9 +31,9 @@ def get_neighborhoud(arr):
 
 class Forest:
 
-    def __init__(self, world_size=(128, 128), p_fire=0.4,
+    def __init__(self, world_size=(64, 64), p_fire=0.4,
                  p_ignition=0.00001, p_tree=0.00001,
-                 init_tree=0.8, extinguisher_ratio=0.05):
+                 init_tree=0.8, extinguisher_ratio=0.1):
         """
         :param world_size: Size of the world.
         :param p_fire: Probability of fire spreading from a burning tree to the neighboring trees.

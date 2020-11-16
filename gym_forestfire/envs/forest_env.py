@@ -15,8 +15,8 @@ from gym.utils import seeding
 from gym_forestfire.envs.forest import Forest
 
 
-STATE_W = 128
-STATE_H = 128
+STATE_W = 64
+STATE_H = 64
 T_HORIZON = 300
 
 
@@ -32,6 +32,7 @@ class ForestFireEnv(gym.Env):
 
         self.action_space = spaces.Box(low=0, high=1, shape=(2,), dtype=np.float32)
         self.observation_space = spaces.Box(low=0, high=10, shape=(STATE_H, STATE_W), dtype=np.uint8)
+        self._max_episode_steps = T_HORIZON
 
     def step(self, action):
         aimed_fire, is_fire = self.forest.step(action)
@@ -50,16 +51,16 @@ class ForestFireEnv(gym.Env):
         # if episode is over and at least 50% of the trees are remaining: add 100, otherwise: subtract 100
         if done:
             if np.mean(self.forest.world) > 0.5 * self.forest.p_init_tree:
-                step_reward += 100
+                step_reward += 300
             else:
-                step_reward -= 100
+                step_reward -= 300
 
         self.reward = step_reward
 
         state = self.forest.world
         if state.shape != (STATE_H, STATE_W):
             state = self._scale(state, STATE_H, STATE_W)
-        self.state = np.array(state)
+        self.state = np.array(state) / self.forest.FIRE_CELL
 
         return self.state, step_reward, done, {}
 
