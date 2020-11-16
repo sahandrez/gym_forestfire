@@ -54,9 +54,10 @@ if __name__ == "__main__":
     parser.add_argument("--policy_freq", default=2, type=int, help="Frequency of delayed policy updates")
     parser.add_argument("--save_model", action="store_true", help="Save model and optimizer parameters")
     parser.add_argument("--load_model", default="", help="Model load file name, \"\" doesn't load, \"default\" uses file_name")
+    parser.add_argument("--exp_name", default="", help="Exp name for file names.")
     args = parser.parse_args()
 
-    file_name = f"{args.policy}_{args.env}_{args.seed}"
+    file_name = f"{args.policy}_{args.env}_{args.seed}_{args.exp_name}"
     print("---------------------------------------")
     print(f"Policy: {args.policy}, Env: {args.env}, Seed: {args.seed}")
     print("---------------------------------------")
