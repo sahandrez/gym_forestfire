@@ -14,6 +14,11 @@ import torch.nn.functional as F
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
+def init_weights(m):
+    print(m)
+    nn.init.orthogonal(m.weight)
+
+
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim, max_action, image_obs):
         super(Actor, self).__init__()
@@ -35,6 +40,7 @@ class Actor(nn.Module):
                 nn.ReLU(),
                 nn.Linear(512, 256)
             )
+            self.cnn.apply(init_weights)
         else:
             self.fcn = nn.Sequential(
                 nn.Linear(state_dim, 256),
@@ -81,6 +87,7 @@ class Critic(nn.Module):
                 nn.ReLU(),
                 nn.Linear(512, 256)
             )
+            self.cnn.apply(init_weights)
         else:
             self.fcn_1 = nn.Sequential(
                 nn.Linear(state_dim + action_dim, 256),
