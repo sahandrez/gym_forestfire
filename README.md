@@ -45,6 +45,7 @@ Requirements:
 * OpenCV (for rendering the environment)
 
 ## Instructions
+### Setup
 Clone the package and install it using `pip`. This install the package and all of its 
 requirements.
 ```
@@ -67,10 +68,18 @@ for _ in range(500):
 env.close()
 ```
 
+### Training
+The TD3 algorithm with CNN-based actor and critic has been implemented based on [author's implementation](https://github.com/sfujim/TD3). 
+To train, simply run:
+```
+python main.py --env gym_forestfire:ForestFire-v0
+```
+
 ## Refrences 
 1. [Drossel B, Schwabl F. Self-organized critical forest-fire model. Physical review letters. 1992 Sep 14;69(11):1629.](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.69.1629)
 1. [Wiering, M. A., Dorigo, M., Haasis, H. D., & Ranze, K. C. (1998). Learning to Control Forest Fires. In Proceedings of the 12th International Symposium on Computer Science for Environmental Protection (UI'98) (pp. 378-388). Metropolis Verlag.](https://dspace.library.uu.nl/handle/1874/23510) 
 1. [Brockman G, Cheung V, Pettersson L, Schneider J, Schulman J, Tang J, Zaremba W. Openai gym. arXiv preprint arXiv:1606.01540. 2016 Jun 5.](https://arxiv.org/abs/1606.01540)
+1. [Fujimoto, S., Hoof, H., & Meger, D. (2018, July). Addressing Function Approximation Error in Actor-Critic Methods. In International Conference on Machine Learning (pp. 1587-1596).](http://proceedings.mlr.press/v80/fujimoto18a.html)
 1. [Rolnick D, Donti PL, Kaack LH, Kochanski K, Lacoste A, Sankaran K, Ross AS, Milojevic-Dupont N, Jaques N, Waldman-Brown A, Luccioni A. Tackling climate change with machine learning. arXiv preprint arXiv:1906.05433. 2019 Jun 10.
 ](https://arxiv.org/abs/1906.05433)
 1. [Blog post: Game of Life in NumPy. URL: http://drsfenner.org/blog/2015/08/game-of-life-in-numpy-2/](http://drsfenner.org/blog/2015/08/game-of-life-in-numpy-2/)

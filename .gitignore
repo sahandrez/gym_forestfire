@@ -8,3 +8,4 @@ data/
 .vscode/
 .DS_Store
 _build/
+results/
