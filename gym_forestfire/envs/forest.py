@@ -31,7 +31,7 @@ def get_neighborhoud(arr):
 
 class Forest:
 
-    def __init__(self, world_size=(16, 16), p_fire=0.4,
+    def __init__(self, world_size=(64, 64), p_fire=0.4,
                  p_ignition=0.0001, p_tree=0.0001,
                  init_tree=0.8, extinguisher_ratio=0.2):
         """
