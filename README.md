@@ -74,6 +74,9 @@ To train, simply run:
 ```
 python main.py --env gym_forestfire:ForestFire-v0
 ```
+But don't expect great learning curves :) The actions saturate quickly even with the 
+Orthogonal Initialization. If you have any ideas for improving the learning, please make 
+a PR. 
 
 ## Refrences 
 1. [Drossel B, Schwabl F. Self-organized critical forest-fire model. Physical review letters. 1992 Sep 14;69(11):1629.](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.69.1629)
